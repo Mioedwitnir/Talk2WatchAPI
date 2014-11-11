@@ -329,6 +329,118 @@ TabbedPane {
     
     }   // Tab
     Tab {
+        title: "Rename Items"
+        Page {  // page
+            ScrollView {
+                Container { // mainPageContainer
+                    leftPadding: 30
+                    rightPadding: 30
+                    Label {
+                        objectName: "m_label"
+                        text: "Rename Actions"
+                        textStyle.base: SystemDefaults.TextStyles.BigText
+                        verticalAlignment: VerticalAlignment.Center
+                    }
+                    Container {
+                        topPadding: 10
+                        layout: StackLayout {orientation: LayoutOrientation.LeftToRight}         
+                        Label {
+                            text: "Old Title"
+                            preferredWidth: 250
+                            verticalAlignment: VerticalAlignment.Center
+                        }
+                        
+                        TextField {
+                            id: oldActionTitleField
+                            verticalAlignment: VerticalAlignment.Center
+                            text: ""
+                        }
+                    
+                    }
+                    Container {
+                        topPadding: 10
+                        layout: StackLayout {orientation: LayoutOrientation.LeftToRight}         
+                        Label {
+                            text: "New Title"
+                            preferredWidth: 250
+                            verticalAlignment: VerticalAlignment.Center
+                        }
+                        
+                        TextField {
+                            id: newActionTitleField
+                            verticalAlignment: VerticalAlignment.Center
+                            text: ""
+                        }
+                    
+                    }
+                    
+                    Button {
+                        horizontalAlignment: HorizontalAlignment.Center
+                        text: "Rename"
+                        verticalAlignment: VerticalAlignment.Center
+                        onClicked: {
+                            t2w.renameAction(oldActionTitleField.text, newActionTitleField.text)
+                        }
+                    }
+                    
+                    Label {
+                        objectName: "m_label"
+                        text: "Rename Folder"
+                        textStyle.base: SystemDefaults.TextStyles.BigText
+                        verticalAlignment: VerticalAlignment.Center
+                    }
+                    Container {
+                        topPadding: 10
+                        layout: StackLayout {orientation: LayoutOrientation.LeftToRight}         
+                        Label {
+                            text: "Old Title"
+                            preferredWidth: 250
+                            verticalAlignment: VerticalAlignment.Center
+                        }
+                        
+                        TextField {
+                            id: oldFolderTitleField
+                            verticalAlignment: VerticalAlignment.Center
+                            text: ""
+                        }
+                    
+                    }
+                    Container {
+                        topPadding: 10
+                        layout: StackLayout {orientation: LayoutOrientation.LeftToRight}         
+                        Label {
+                            text: "New Title"
+                            preferredWidth: 250
+                            verticalAlignment: VerticalAlignment.Center
+                        }
+                        
+                        TextField {
+                            id: newFolderTitleField
+                            verticalAlignment: VerticalAlignment.Center
+                            text: ""
+                        }
+                    
+                    }
+                    
+                    Button {
+                        horizontalAlignment: HorizontalAlignment.Center
+                        text: "Rename"
+                        verticalAlignment: VerticalAlignment.Center
+                        onClicked: {
+                            t2w.renameFolder(oldFolderTitleField.text, newFolderTitleField.text)
+                        }
+                    }
+                    
+                    
+                    bottomPadding: 50
+                
+                }    //mainPageContainer
+            }
+        }   // page
+    
+    }   // Tab
+    
+    Tab {
         title: "Sending Messages"
         Page {  // page
             ScrollView {

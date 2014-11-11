@@ -150,6 +150,10 @@ public:
 
 	Q_INVOKABLE void removeFolder(const QString &_folder);
 
+    Q_INVOKABLE void renameAction(const QString &_oldTitle, const QString &_newTitle);
+
+    Q_INVOKABLE void renameFolder(const QString &_oldTitle, const QString &_newTitle);
+
 	// APP MESSAGE IS NOT YET INTEGRATED!
 
 	Q_INVOKABLE void registerAppMessageListener(const QString &_uuid);

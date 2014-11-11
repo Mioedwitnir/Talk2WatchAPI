@@ -172,6 +172,18 @@ void Talk2WatchInterface::removeFolder(const QString &_folder)
     sendCommand(command);
 }
 
+void Talk2WatchInterface::renameAction(const QString &_oldTitle, const QString &_newTitle)
+{
+    QString command = "APP_RENAME_ACTION$$" + _oldTitle + "$$" + _newTitle + "$$" + m_appName + "$$" + m_appKey;
+    sendCommand(command);
+}
+
+void Talk2WatchInterface::renameFolder(const QString &_oldTitle, const QString &_newTitle)
+{
+    QString command = "APP_RENAME_FOLDER$$" + _oldTitle + "$$" + _newTitle + "$$" + m_appName + "$$" + m_appKey;
+    sendCommand(command);
+}
+
 void Talk2WatchInterface::registerAppMessageListener(const QString &_uuid)
 {
     QString command = "APP_REGISTER_UUID$$" + _uuid + "$$" + m_appName + "$$" + m_appKey;
