@@ -10,6 +10,7 @@
 #include <bb/system/InvokeQueryTargetsReply>
 #include <bb/system/InvokeReply>
 #include "UdpModule.h"
+#include "Serializer.h"
 
 /*	GENERAL INFORMATION
  *
@@ -23,6 +24,8 @@ Talk2WatchInterface::Talk2WatchInterface(QObject *_parent)
 	m_udp = new UdpModule(this);
 	m_udp->listenOnPort(8484);
 	connect(m_udp, SIGNAL(reveivedData(QString)), this, SLOT(onDataReived(QString)));
+
+	m_serializer = new Serializer(this);
 
 
 	m_talk2WatchAvailable = false;
@@ -206,6 +209,21 @@ void Talk2WatchInterface::forwardSourceCode()
 	m_invokeManager->invoke(request);
 }
 
+void Talk2WatchInterface::sendAppMessage(const QString &_uuid, const QHash<QString, QVariant> &_values)
+{
+    QHash<QString, QVariant> values = _values;
+    values.insert("uuid", _uuid);
+
+    sendCommand(m_serializer->serialize("APPMESSAGE", "PEBBLE", values));
+}
+
+void Talk2WatchInterface::sendAppLaunchRequest(const QString &_uuid)
+{
+    QHash<QString, QVariant> values;
+    values.insert("uuid", _uuid);
+
+    sendCommand(m_serializer->serialize("LAUNCH_APP", "PEBBLE", values));
+}
 
 /************************************************************
  * 						PRIVATE METHODS						*
@@ -236,7 +254,26 @@ void Talk2WatchInterface::sendCommandViaInvocation(QString _command, QString _ta
     m_invokeManager->invoke(request);
 }
 
+void Talk2WatchInterface::handleMessage(const QString &_type, const QString &_category, const QHash<QString, QVariant> &_values)
+{
+    if(_category=="PEBBLE")
+    {
+        qDebug() << _type << _values;
 
+        if(_type=="APPMESSAGE_RECEIVED")
+        {
+            QHash<QString, QVariant> values = _values;
+            QString uuid = _values.value("uuid").toString();
+            values.remove("uuid");
+
+            emit appMessageReceived(uuid, values);
+        }
+        else if(_type=="APP_STARTED")
+            emit appStarted(_values.value("uuid").toString());
+        else if(_type=="APP_CLOSED")
+            emit appClosed(_values.value("uuid").toString());
+    }
+}
 
 /************************************************************
  * 						   	 SLOTS   						*
@@ -244,7 +281,21 @@ void Talk2WatchInterface::sendCommandViaInvocation(QString _command, QString _ta
 
 void Talk2WatchInterface::onDataReived(const QString &_data)
 {
-	emit receivedData(_data);
+    qDebug() << "_VALID_?" <<  m_serializer->isValid(_data);
+
+	if(m_serializer->isValid(_data))
+	{
+	    QHash<QString, QVariant> data = m_serializer->deserialize(_data);
+	    QString category = data.value("EVENT_CATEGORY").toString();
+	    QString type = data.value("EVENT_TYPE").toString();
+
+	    data.remove("EVENT_CATEGORY");
+	    data.remove("EVENT_TYPE");
+
+	    handleMessage(type, category, data);
+	}
+	else
+	    emit receivedData(_data);
 }
 
 

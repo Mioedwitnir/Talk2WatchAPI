@@ -11,6 +11,7 @@
 #include <QObject>
 #include <bb/system/InvokeManager>
 
+class Serializer;
 class UdpModule;
 
 class Talk2WatchInterface : public QObject
@@ -154,19 +155,27 @@ public:
 
     Q_INVOKABLE void renameFolder(const QString &_oldTitle, const QString &_newTitle);
 
-	// APP MESSAGE IS NOT YET INTEGRATED!
-
 	Q_INVOKABLE void registerAppMessageListener(const QString &_uuid);
 
 	Q_INVOKABLE void deregisterAppMessageListener(const QString &_uuid);
 
-
 	Q_INVOKABLE void forwardSourceCode();
+
+
+	// Pebble
+
+	Q_INVOKABLE void sendAppMessage(const QString &_uuid, const QHash<QString, QVariant> &_values);
+
+	Q_INVOKABLE void sendAppLaunchRequest(const QString &_uuid);
+
+	void handleMessage(const QString &_type, const QString &_category, const QHash<QString, QVariant> &_values);
+
+
 private:
 
 	// UDP
 	UdpModule *m_udp;
-
+	Serializer *m_serializer;
 
 	// Transmission
 	void sendCommand(QString _command);
@@ -195,11 +204,13 @@ signals:
 	void transmissionReady();
 	void receivedData(QString);
 
+	void appMessageReceived(const QString &_uuid, const QHash<QString, QVariant> &_values);
+	void appStarted(const QString &_uuid);
+	void appClosed(const QString &_uuid);
 
 public slots:
 	void onDataReived(const QString &_data);
 	void onTalk2WatchLookup();
-
 
 
 };

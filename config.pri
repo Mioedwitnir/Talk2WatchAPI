@@ -67,12 +67,14 @@ config_pri_assets {
 
 config_pri_source_group1 {
     SOURCES += \
+        $$quote($$BASEDIR/src/T2W API/Serializer.cpp) \
         $$quote($$BASEDIR/src/T2W API/Talk2WatchInterface.cpp) \
         $$quote($$BASEDIR/src/T2W API/UdpModule.cpp) \
         $$quote($$BASEDIR/src/applicationui.cpp) \
         $$quote($$BASEDIR/src/main.cpp)
 
     HEADERS += \
+        $$quote($$BASEDIR/src/T2W API/Serializer.h) \
         $$quote($$BASEDIR/src/T2W API/Talk2WatchInterface.h) \
         $$quote($$BASEDIR/src/T2W API/UdpModule.h) \
         $$quote($$BASEDIR/src/applicationui.hpp)
