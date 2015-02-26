@@ -15,6 +15,15 @@ Serializer::~Serializer()
 {
 }
 
+QString Serializer::serialize(const QString &_type, const QString &_category, const QStringList &_keys, const QVariantList &_values)
+{
+    QHash<QString, QVariant> values;
+    for(int i=0; i<_keys.size(); i++)
+        values.insert(_keys.at(i), _values.at(i));
+
+    return serialize(_type, _category, values);
+}
+
 QString Serializer::serialize(const QString &_type, const QString &_category, const QHash<QString, QVariant> &_values)
 {
     QString data = "";
@@ -79,6 +88,8 @@ QVariant Serializer::convertToVariant(const QString &_value, const QString &_typ
     if(_type=="QString")
         value = QVariant(_value);
     else if(_type=="int")
+        value = QVariant(_value.toInt());
+    else if(_type=="uint")
         value = QVariant(_value.toInt());
     else if(_type=="double")
         value = QVariant(_value.toDouble());

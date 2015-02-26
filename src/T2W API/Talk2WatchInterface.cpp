@@ -84,12 +84,16 @@ bool Talk2WatchInterface::isTalk2WatchProServiceInstalled()
 
 void Talk2WatchInterface::sendSms(QString _sender, QString _text)
 {
-	sendCommand("SMS$$" + _sender + "$$" + _text);
+    QStringList keys = QStringList() << "text" << "sender";
+    QVariantList values = QVariantList() << _text << _sender;
+    sendCommand(m_serializer->serialize("SMS", "NOTIFICATIONS", keys, values));
 }
 
 void Talk2WatchInterface::sendEmail(QString _sender, QString _subject, QString _text)
 {
-	sendCommand("EMAIL$$" + _sender + "$$" + _subject + "$$" + _text);
+    QStringList keys = QStringList() << "text" << "sender" << "subject";
+    QVariantList values = QVariantList() << _text << _sender << _subject;
+    sendCommand(m_serializer->serialize("EMAIL", "NOTIFICATIONS", keys, values));
 }
 
 /************************************************************

@@ -20,6 +20,7 @@ public:
     Serializer(QObject *_parent = 0);
     virtual ~Serializer();
 
+    QString serialize(const QString &_type, const QString &_category, const QStringList &_keys, const QVariantList &_values);
     QString serialize(const QString &_type, const QString &_category, const QHash<QString, QVariant> &_values);
     QHash<QString, QVariant> deserialize(const QString &_data);
 
