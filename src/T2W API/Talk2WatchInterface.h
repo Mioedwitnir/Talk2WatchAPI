@@ -9,6 +9,7 @@
 #define TALK2WATCHINTERFACE_H_
 
 #include <QObject>
+#include <QVariantList>
 #include <bb/system/InvokeManager>
 
 class Serializer;
@@ -101,7 +102,7 @@ public:
 	/*	RECEIVING MESSAGES - STEP 2
 	 *
 	 *	Call the authorization method and wait for a reply. The reply will be passed to the receiver which was defined in STEP 1.
-	 *	If the request was successful the value APP_RQ_SUCCESS will be returned
+	 *	If the request was successful the value AUTH_SUCCESS will be returned
 	 */
 
 	Q_INVOKABLE void sendAppAuthorizationRequest();
@@ -155,18 +156,50 @@ public:
 
     Q_INVOKABLE void renameFolder(const QString &_oldTitle, const QString &_newTitle);
 
-	Q_INVOKABLE void registerAppMessageListener(const QString &_uuid);
-
-	Q_INVOKABLE void deregisterAppMessageListener(const QString &_uuid);
-
 	Q_INVOKABLE void forwardSourceCode();
 
 
-	// Pebble
+    /************************************************************
+     *                      PEBBLE METHODS                      *
+     ***********************************************************/
+
+	/*  PEBBLE APP MESSAGE
+	 *
+	 *  App messages can be sent with specifying their numeric app key values (as they are defined in the appinfo file) as strings with the corresponding data values as QVariant
+	 */
+
+	/*  EXAMPLE
+	 *
+	 *  You want to send an integer temperature value to a watchface (the uuid has previously been defined and stored in the uuid variable).
+	 *  You have defined an endpoint TEMPERATURE in your appinfo file and it is mapped to 1.
+	 *  Then the app message call looks like this: (for a temperature value = 30)
+	 *
+	 *  QHash<QString, QVariant> values;
+	 *  values.insert("1", 30);
+	 *
+	 *  sendAppMessage(uuid, values);
+	 */
 
 	Q_INVOKABLE void sendAppMessage(const QString &_uuid, const QHash<QString, QVariant> &_values);
 
 	Q_INVOKABLE void sendAppLaunchRequest(const QString &_uuid);
+
+    /*  PEBBLE EVENTS
+     *
+     *  Registering a pebble event listener requires an authorized app connection (see the methods above).
+     *  After the registration method has been called, T2W sends back REGISTER_UUID_SUCCESS if everything went fine
+     *
+     *  From that point of time, this class will emit the following signals as soon as their corresponding event occurs in T2W
+     *
+     *  void appMessageReceived(const QString &_uuid, const QHash<QString, QVariant> &_values);
+     *  void appStarted(const QString &_uuid);
+     *  void appClosed(const QString &_uuid);
+     */
+
+
+    Q_INVOKABLE void registerAppMessageListener(const QString &_uuid);
+
+    Q_INVOKABLE void deregisterAppMessageListener(const QString &_uuid);
 
 	void handleMessage(const QString &_type, const QString &_category, const QHash<QString, QVariant> &_values);
 

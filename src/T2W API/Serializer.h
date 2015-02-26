@@ -11,6 +11,7 @@
 #include <QObject>
 #include <QHash>
 #include <QStringList>
+#include <QVariantList>
 
 class Serializer : public QObject
 {

@@ -187,19 +187,6 @@ void Talk2WatchInterface::renameFolder(const QString &_oldTitle, const QString &
     sendCommand(command);
 }
 
-void Talk2WatchInterface::registerAppMessageListener(const QString &_uuid)
-{
-    QString command = "APP_REGISTER_UUID$$" + _uuid + "$$" + m_appName + "$$" + m_appKey;
-    sendCommand(command);
-}
-
-void Talk2WatchInterface::deregisterAppMessageListener(const QString &_uuid)
-{
-    QString command = "APP_DEREGISTER_UUID$$" + _uuid + "$$" + m_appName + "$$" + m_appKey;
-    sendCommand(command);
-}
-
-
 void Talk2WatchInterface::forwardSourceCode()
 {
 	bb::system::InvokeRequest request;
@@ -224,6 +211,19 @@ void Talk2WatchInterface::sendAppLaunchRequest(const QString &_uuid)
 
     sendCommand(m_serializer->serialize("LAUNCH_APP", "PEBBLE", values));
 }
+
+void Talk2WatchInterface::registerAppMessageListener(const QString &_uuid)
+{
+    QString command = "APP_REGISTER_UUID$$" + _uuid + "$$" + m_appName + "$$" + m_appKey;
+    sendCommand(command);
+}
+
+void Talk2WatchInterface::deregisterAppMessageListener(const QString &_uuid)
+{
+    QString command = "APP_DEREGISTER_UUID$$" + _uuid + "$$" + m_appName + "$$" + m_appKey;
+    sendCommand(command);
+}
+
 
 /************************************************************
  * 						PRIVATE METHODS						*
