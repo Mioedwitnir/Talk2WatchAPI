@@ -236,7 +236,27 @@ private:
 
 signals:
 	void transmissionReady();
-	void receivedData(QString);
+	void receivedData(QString); // DEPRECATED - use the signals below
+
+	void authSuccess();
+	void authError(const QString &_error);
+	void actionCreationSuccess(const QString &_action);
+	void actionCreationError(const QString &_action, const QString &_error);
+	void actionRemovalSuccess(const QString &_action);
+	void actionRemovalError(const QString &_action, const QString &_error);
+	void actionRenamingSuccess(const QString &_action);
+	void actionRenamingError(const QString &_action, const QString &_error);
+	void actionTriggered(const QString &_command);
+	void connectionRemovalSuccess();
+	void folderCreationSuccess(const QString &_folder);
+	void folderCreationError(const QString &_folder, const QString &_error);
+	void folderRemovalSuccess(const QString &_folder);
+	void folderRemovalError(const QString &_folder, const QString &_error);
+	void folderRenamingSuccess(const QString &_folder);
+	void folderRenamingError(const QString &_folder, const QString &_error);
+	void uuidRegistrationSuccess(const QString &_uuid);
+	void uuidDeregistrationSucess(const QString &_uuid);
+
 
 	void appMessageReceived(const QString &_uuid, const QHash<QString, QVariant> &_values);
 	void appStarted(const QString &_uuid);

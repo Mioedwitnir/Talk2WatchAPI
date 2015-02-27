@@ -288,6 +288,52 @@ void Talk2WatchInterface::handleMessage(const QString &_type, const QString &_ca
         else if(_type=="APP_CLOSED")
             emit appClosed(_values.value("uuid").toString());
     }
+    else if(_category=="APP_CONNECTION")
+    {
+        qDebug() << "__RX__" << _type << _values;
+
+        QString action = _values.value("action").toString();
+        QString error = _values.value("error").toString();
+        QString folder = _values.value("folder").toString();
+        QString uuid = _values.value("uuid").toString();
+
+        if(_type=="AUTH_SUCCESS")
+            emit authSuccess();
+        else if(_type=="AUTH_ERROR")
+            emit authError(error);
+        else if(_type=="CREATE_ACTION_SUCCESS")
+            emit actionCreationSuccess(action);
+        else if(_type=="CREATE_ACTION_ERROR")
+            emit actionCreationError(action, error);
+        else if(_type=="REMOVE_ACTION_SUCCESS")
+            emit actionRemovalSuccess(action);
+        else if(_type=="REMOVE_ACTION_ERROR")
+            emit actionRemovalError(action, error);
+        else if(_type=="RENAME_ACTION_SUCCESS")
+            emit actionRenamingSuccess(action);
+        else if(_type=="RENAME_ACTION_ERROR")
+            emit actionRenamingError(action, error);
+        else if(_type=="ACTION_TRIGGERED")
+            emit actionTriggered(_values.value("command").toString());
+        else if(_type=="REMOVE_CONNECTION_SUCCESS")
+            emit connectionRemovalSuccess();
+        else if(_type=="CREATE_FOLDER_SUCCESS")
+            emit folderCreationSuccess(folder);
+        else if(_type=="CREATE_FOLDER_ERROR")
+            emit folderCreationError(folder, error);
+        else if(_type=="REMOVE_FOLDER_SUCCESS")
+            emit folderRemovalSuccess(folder);
+        else if(_type=="REMOVE_FOLDER_ERROR")
+            emit folderRemovalError(folder, error);
+        else if(_type=="RENAME_FOLDER_SUCCESS")
+            emit folderRenamingSuccess(folder);
+        else if(_type=="RENAME_FOLDER_ERROR")
+            emit folderRenamingError(folder, error);
+        else if(_type=="REGISTER_UUID_SUCCESS")
+            emit uuidRegistrationSuccess(uuid);
+        else if(_type=="DEREGISTER_UUID_SUCCESS")
+            emit uuidDeregistrationSucess(uuid);
+    }
 }
 
 /************************************************************
