@@ -213,6 +213,7 @@ private:
 	// Transmission
 	void sendCommand(QString _command);
 	void sendCommandViaInvocation(QString _command, QString _target);
+	void sendAuthenticatedCommand(const QString &_type, const QString &_category, const QStringList &_keys, const QVariantList &_values);
 
 	QString m_appName;
 	QString m_appVersion;
