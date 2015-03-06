@@ -42,7 +42,10 @@ public:
 
 private slots:
     void onTransmissionReady();
-    void onUdpDataReceived(QString _data);
+    void onDismissReceived(const QString &_id);
+    void onGenericReceived(const QString &_id, const QString &_text);
+    void onResponseReceived(const QString &_id, const QString &_text);
+
 
 private:
 

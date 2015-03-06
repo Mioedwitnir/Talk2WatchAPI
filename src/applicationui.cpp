@@ -25,45 +25,82 @@
 
 using namespace bb::cascades;
 
+#include "PebbleNotifications/pebblenotification.h"
+
 ApplicationUI::ApplicationUI(bb::cascades::Application *app) :
         QObject(app)
 {
 
-    t2w = new Talk2WatchInterface(this);
+    /* IMPORTANT
+     *
+     * Change the port and do not use 8484
+     * Set it to -1 if you only want to send messages
+     *
+     */
+
+    t2w = new Talk2WatchInterface(8484, this);
 
 
-    // Create scene document from main.qml asset, the parent is set
-    // to ensure the document gets destroyed properly at shut down.
     QmlDocument *qml = QmlDocument::create("asset:///main.qml").parent(this);
     qml->setContextProperty("t2w", t2w);
-
-
-    // Create root object for the UI
     AbstractPane *root = qml->createRootObject<AbstractPane>();
-
-    // Set created root object as the application scene
     app->setScene(root);
 
     m_authStatusLabel = root->findChild<Label*>("m_authStatusLabel");
 
-    connect(t2w, SIGNAL(receivedData(QString)), this, SLOT(onUdpDataReceived(QString)));
     connect(t2w, SIGNAL(transmissionReady()), this, SLOT(onTransmissionReady()));
-
 }
 
 
 void ApplicationUI::onTransmissionReady()
 {
 	qDebug() << "onTransmissionReady";
+
+	/*  Uncommend the following lines for an example of Pebble notifications.
+	 *  The app will send a notification on startup.
+	 */
+
+	/*
+
+
+    // change this to your own app values (and don't use port 8484!)
+    // the method has to be called before a notification is sent
+	t2w->setAppValues("NewApp", "0.1", "appKey", "UDP", "8484", "");
+
+	connect(t2w, SIGNAL(dismissReceived(QString)), this, SLOT(onDismissReceived(QString)));
+    connect(t2w, SIGNAL(genericReceived(QString, QString)), this, SLOT(onGenericReceived(QString, QString)));
+    connect(t2w, SIGNAL(responseReceived(QString, QString)), this, SLOT(onResponseReceived(QString, QString)));
+
+    PebbleNotification notification("Title", "Subtitle", "Body");
+    notification.addDismissAction("Dismiss");
+    notification.addResponseAction("Reply", QStringList() << "text1" << "text2" << "text3");
+    notification.addGenericAction("Action");
+    t2w->sendPebbleNotification(notification);
+
+    */
+
 }
 
-void ApplicationUI::onUdpDataReceived(QString _data)
+void ApplicationUI::onDismissReceived(const QString &_id)
 {
-	qDebug() << "onUdpDataReceived";
-	bb::system::SystemToast *toast = new bb::system::SystemToast(this);
-	toast->setBody(_data);
-	toast->show();
+    // handle the dismiss event
 
-	if(_data=="AUTH_SUCCESS" || _data=="AUTH_KEY_MISMATCH")
-		m_authStatusLabel->setText(_data);
+
+    // no acknowledgement
+}
+void ApplicationUI::onGenericReceived(const QString &_id, const QString &_text)
+{
+    // handle the generic event
+
+
+    // send an acknowledgement
+    t2w->sendPebbleNotificationAcknowledgment(_id, "Success");
+}
+void ApplicationUI::onResponseReceived(const QString &_id, const QString &_text)
+{
+    // handle the response event
+
+
+    // send an acknowledgement
+    t2w->sendPebbleNotificationAcknowledgment(_id, "Transmitted");
 }

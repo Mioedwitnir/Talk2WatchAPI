@@ -18,12 +18,16 @@
  *
  */
 
-Talk2WatchInterface::Talk2WatchInterface(QObject *_parent)
+Talk2WatchInterface::Talk2WatchInterface(int _udpPort, QObject *_parent)
 {
 
 	m_udp = new UdpModule(this);
-	m_udp->listenOnPort(8484);
-	connect(m_udp, SIGNAL(reveivedData(QString)), this, SLOT(onDataReived(QString)));
+
+	if(_udpPort!=-1)
+	{
+	    m_udp->listenOnPort(_udpPort);
+	    connect(m_udp, SIGNAL(reveivedData(QString)), this, SLOT(onDataReived(QString)));
+	}
 
 	m_serializer = new Serializer(this);
 
@@ -288,6 +292,21 @@ void Talk2WatchInterface::handleMessage(const QString &_type, const QString &_ca
         else if(_type=="APP_CLOSED")
             emit appClosed(_values.value("uuid").toString());
     }
+    else if(_category=="PEBBLE_NOTIFICATIONS")
+    {
+        qDebug() << "__EVENT__" << _type; //<< _values;
+
+        QString id = _values.value("id").toString();
+        QString text = _values.value("text").toString();
+
+        if(_type=="DISMISS")
+            emit dismissReceived(id);
+        else if(_type=="GENERIC")
+            emit genericReceived(id, text);
+        else if(_type=="RESPONSE")
+            emit responseReceived(id, text);
+
+    }
     else if(_category=="APP_CONNECTION")
     {
         qDebug() << "__RX__" << _type << _values;
@@ -334,6 +353,22 @@ void Talk2WatchInterface::handleMessage(const QString &_type, const QString &_ca
         else if(_type=="DEREGISTER_UUID_SUCCESS")
             emit uuidDeregistrationSucess(uuid);
     }
+}
+
+QString Talk2WatchInterface::sendPebbleNotification(PebbleNotification _notification)
+{
+    QHash<QString, QVariant> values = _notification.getValues();
+
+    sendAuthenticatedCommand("SEND_NOTIFICATION", "PEBBLE", values.keys() << "appId", values.values() << "127.0.0.1:" + m_port);
+
+    return _notification.getId();
+}
+
+void Talk2WatchInterface::sendPebbleNotificationAcknowledgment(const QString &_id, const QString &_text)
+{
+    QStringList keys = QStringList() << "id" << "text";
+    QVariantList values = QVariantList() << _id << _text;
+    sendCommand(m_serializer->serialize("SEND_REPLY_SUCCESS", "MESSAGES", keys, values));
 }
 
 /************************************************************

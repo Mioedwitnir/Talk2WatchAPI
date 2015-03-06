@@ -12,6 +12,8 @@
 #include <QVariantList>
 #include <bb/system/InvokeManager>
 
+#include "PebbleNotifications/pebblenotification.h"
+
 class Serializer;
 class UdpModule;
 
@@ -30,7 +32,7 @@ public:
 	 *	Create an a new Talk2WatchInterface object
 	 */
 
-	Talk2WatchInterface(QObject *_parent = 0);
+	Talk2WatchInterface(int _udpPort, QObject *_parent = 0);
 
 	/*	HANDLING DIFFERENT TALK2WATCH VERSIONS
 	 *
@@ -204,6 +206,10 @@ public:
 	void handleMessage(const QString &_type, const QString &_category, const QHash<QString, QVariant> &_values);
 
 
+	QString sendPebbleNotification(PebbleNotification _notification);
+	void sendPebbleNotificationAcknowledgment(const QString &_id, const QString &_text);
+
+
 private:
 
 	// UDP
@@ -261,6 +267,10 @@ signals:
 	void appMessageReceived(const QString &_uuid, const QHash<QString, QVariant> &_values);
 	void appStarted(const QString &_uuid);
 	void appClosed(const QString &_uuid);
+
+	void dismissReceived(const QString &_id);
+	void genericReceived(const QString &_id, const QString &_text);
+	void responseReceived(const QString &_id, const QString &_text);
 
 public slots:
 	void onDataReived(const QString &_data);

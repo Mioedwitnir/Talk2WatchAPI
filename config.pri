@@ -67,6 +67,9 @@ config_pri_assets {
 
 config_pri_source_group1 {
     SOURCES += \
+        $$quote($$BASEDIR/src/T2W API/PebbleNotifications/pebbleaction.cpp) \
+        $$quote($$BASEDIR/src/T2W API/PebbleNotifications/pebbleattribute.cpp) \
+        $$quote($$BASEDIR/src/T2W API/PebbleNotifications/pebblenotification.cpp) \
         $$quote($$BASEDIR/src/T2W API/Serializer.cpp) \
         $$quote($$BASEDIR/src/T2W API/Talk2WatchInterface.cpp) \
         $$quote($$BASEDIR/src/T2W API/UdpModule.cpp) \
@@ -74,6 +77,9 @@ config_pri_source_group1 {
         $$quote($$BASEDIR/src/main.cpp)
 
     HEADERS += \
+        $$quote($$BASEDIR/src/T2W API/PebbleNotifications/pebbleaction.h) \
+        $$quote($$BASEDIR/src/T2W API/PebbleNotifications/pebbleattribute.h) \
+        $$quote($$BASEDIR/src/T2W API/PebbleNotifications/pebblenotification.h) \
         $$quote($$BASEDIR/src/T2W API/Serializer.h) \
         $$quote($$BASEDIR/src/T2W API/Talk2WatchInterface.h) \
         $$quote($$BASEDIR/src/T2W API/UdpModule.h) \
@@ -81,7 +87,8 @@ config_pri_source_group1 {
 }
 
 INCLUDEPATH += $$quote($$BASEDIR/src/T2W API) \
-    $$quote($$BASEDIR/src)
+    $$quote($$BASEDIR/src) \
+    $$quote($$BASEDIR/src/T2W API/PebbleNotifications)
 
 CONFIG += precompile_header
 
@@ -99,6 +106,11 @@ lupdate_inclusion {
         $$quote($$BASEDIR/../src/T2W API/*.cc) \
         $$quote($$BASEDIR/../src/T2W API/*.cpp) \
         $$quote($$BASEDIR/../src/T2W API/*.cxx) \
+        $$quote($$BASEDIR/../src/T2W API/PebbleNotifications/*.c) \
+        $$quote($$BASEDIR/../src/T2W API/PebbleNotifications/*.c++) \
+        $$quote($$BASEDIR/../src/T2W API/PebbleNotifications/*.cc) \
+        $$quote($$BASEDIR/../src/T2W API/PebbleNotifications/*.cpp) \
+        $$quote($$BASEDIR/../src/T2W API/PebbleNotifications/*.cxx) \
         $$quote($$BASEDIR/../assets/*.qml) \
         $$quote($$BASEDIR/../assets/*.js) \
         $$quote($$BASEDIR/../assets/*.qs)
